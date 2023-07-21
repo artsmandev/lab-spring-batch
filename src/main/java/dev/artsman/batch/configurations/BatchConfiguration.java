@@ -7,6 +7,7 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
@@ -23,13 +24,14 @@ public class BatchConfiguration {
 	@Bean
 	public Job helloWorldJob() {
 		return this.jobFactory.get("Job: Hello World")
-													.start(helloWorldStep())
+													.start(this.helloWorldStep())
+													.incrementer(new RunIdIncrementer())
 													.build();
 	}
 
 	private Step helloWorldStep() {
 		return this.stepFactory.get("Step: Hello World")
-													 .tasklet(helloWorldTasklet())
+													 .tasklet(this.helloWorldTasklet())
 													 .build();
 	}
 
